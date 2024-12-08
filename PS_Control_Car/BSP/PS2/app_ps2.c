@@ -1,12 +1,14 @@
 #include "app_ps2.h"
 
 int PS2_LX, PS2_LY, PS2_RX, PS2_RY, PS2_KEY;
+float Distance_Wall;
 int16_t g_car_speed = 200;
 
 RGB_Color g_color = red;		   // 设置大灯RGB的颜色 Set the RGB color of the headlights
 Color_effect_t g_Se_eff = CUT_RGB; // 特效的切换 Switching of special effects
 
-char buff[20] = {'\0'};
+char line1[20] = {'\0'};
+char line2[20] = {'\0'};
 
 // 函数功能：ps2控制小车
 // Function function: PS2 control car
@@ -19,8 +21,10 @@ void User_PS2_Control(void)
 	PS2_RY = PS2_AnologData(PSS_RY);
 	PS2_KEY = PS2_DataKey(); // 出现192
 
-	sprintf(buff, "speed = %d   ", g_car_speed);
-	OLED_Draw_Line(buff, 2, false, true);
+	sprintf(line1, "speed = %d   ", g_car_speed);
+	sprintf(line2, "speed = %.3f   ", Distance_Wall);
+	OLED_Draw_Line(line1, 2, false, false);
+	OLED_Draw_Line(line2, 3, false, true);
 
 	// 手柄没通信上 The handle is not communicating
 	if ((PS2_LX == 255) && (PS2_LY == 255) && (PS2_RX == 255) && (PS2_RY == 255))
@@ -105,18 +109,15 @@ void User_PS2_Control(void)
 		wheel_State(MOTION_LEFT, g_car_speed);
 		break;
 
-	case PSB_GREEN:
-		Set_RGB(RGB_Max, (RGB_Color)(g_color % Max_color));
-		g_color++;
-		if (g_color == Max_color)
-			g_color = red;
+	case PSB_GREEN: //Triangle
+		Distance_Wall = Get_distance();
 		break;
-	case PSB_BLUE:
+	case PSB_BLUE: //Cross
 		RGB_OFF_ALL;
 		if (g_color != red)
 			g_color--;
 		break; // 关闭所有大灯 Turn off all headlights
-	case PSB_PINK:
+	case PSB_PINK: //Square
 		g_Se_eff++; // 切换特效 Switch special effects
 		if (g_Se_eff >= RGB_EFFCT_MAX)
 		{
@@ -125,7 +126,7 @@ void User_PS2_Control(void)
 		wheel_State(MOTION_STOP, 0); // 把车停了，再展示特效 Park the car and display the special effects again
 		user_control(g_Se_eff);
 		break;
-	case PSB_RED:
+	case PSB_RED:  //Round
 		g_Se_eff--; // 切换特效 Switch special effects
 		if (g_Se_eff < CUT_RGB)
 		{

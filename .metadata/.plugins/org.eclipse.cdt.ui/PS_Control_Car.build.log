@@ -1,0 +1,21 @@
+18:55:03 **** Incremental Build of configuration Debug for project PS_Control_Car ****
+make -j24 all 
+arm-none-eabi-gcc "../BSP/PS2/app_ps2.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xE -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../BSP/encoder -I../BSP/motor -I../BSP/tim -I../BSP -I../BSP/OLED -I../BSP/PS2 -I../BSP/delay -I../BSP/RGB -I"C:/Projet Programmation/GitHub/VoitureIntel/VoitureIntel/PS_Control_Car/BSP/ultrasonic" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"BSP/PS2/app_ps2.d" -MT"BSP/PS2/app_ps2.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "BSP/PS2/app_ps2.o"
+arm-none-eabi-gcc -o "PS_Control_Car.elf" @"objects.list"   -mcpu=cortex-m3 -T"C:\Projet Programmation\GitHub\VoitureIntel\VoitureIntel\PS_Control_Car\STM32F103ZETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PS_Control_Car.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+C:/Program Files/STM32CubeIDE_1.16.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.0.200.202406191623/tools/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: PS_Control_Car.elf has a LOAD segment with RWX permissions
+Finished building target: PS_Control_Car.elf
+ 
+arm-none-eabi-size  PS_Control_Car.elf 
+arm-none-eabi-objdump -h -S PS_Control_Car.elf  > "PS_Control_Car.list"
+arm-none-eabi-objcopy  -O ihex PS_Control_Car.elf  "PS_Control_Car.hex"
+   text	   data	    bss	    dec	    hex	filename
+  57120	    552	   3496	  61168	   eef0	PS_Control_Car.elf
+Finished building: default.size.stdout
+ 
+Finished building: PS_Control_Car.hex
+ 
+Finished building: PS_Control_Car.list
+ 
+
+18:55:03 Build Finished. 0 errors, 1 warnings. (took 747ms)
+

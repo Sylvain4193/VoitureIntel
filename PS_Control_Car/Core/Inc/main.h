@@ -76,6 +76,10 @@ void Error_Handler(void);
 #define PS2_DI_GPIO_Port GPIOA
 #define PS2_DO_Pin GPIO_PIN_7
 #define PS2_DO_GPIO_Port GPIOA
+#define TRIG_Pin GPIO_PIN_11
+#define TRIG_GPIO_Port GPIOF
+#define ECHO_Pin GPIO_PIN_12
+#define ECHO_GPIO_Port GPIOF
 #define LRGB_R_Pin GPIO_PIN_1
 #define LRGB_R_GPIO_Port GPIOG
 #define LRGB_G_Pin GPIO_PIN_7

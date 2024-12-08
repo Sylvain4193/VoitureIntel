@@ -1,0 +1,24 @@
+!SESSION 2024-12-08 17:56:57.054 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=fr_FR
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-12-08 17:57:48.636
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-12-08 17:57:48.643
+!MESSAGE Log4j2 initialized with config file C:\Projet Programmation\GitHub\VoitureIntel\VoitureIntel\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-12-08 17:57:51.484
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-12-08 17:58:27.560
+!MESSAGE Indexed 'PS_Control_Car' (36 sources, 119 headers) in 5.15 sec: 9,794 declarations; 66,019 references; 2 unresolved inclusions; 36 syntax errors; 188 unresolved names (0.25%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-12-08 18:27:55.774
+!MESSAGE Indexed 'PS_Control_Car' (37 sources, 120 headers) in 1.71 sec: 9,819 declarations; 66,278 references; 2 unresolved inclusions; 36 syntax errors; 188 unresolved names (0.25%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2024-12-08 18:48:22.376
+!MESSAGE Indexed 'LCD_sensor' (35 sources, 122 headers) in 2.03 sec: 9,087 declarations; 36,447 references; 2 unresolved inclusions; 36 syntax errors; 192 unresolved names (0.42%)

@@ -43,6 +43,9 @@ void Bsp_Tim_Init(void)
 
 	//启动定时6中断
 	HAL_TIM_Base_Start_IT(&htim6);
+
+	//Init Timer 7 for Ultrason
+	HAL_TIM_Base_Start_IT(&htim7);
 }
 
 
@@ -63,7 +66,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 	if (htim->Instance == TIM7)//10us
 	{
-
+		if (ultrasonic_flag) // 开始测距--超声波
+		{
+			ultrasonic_num++;
+		}
 	}
 }
 

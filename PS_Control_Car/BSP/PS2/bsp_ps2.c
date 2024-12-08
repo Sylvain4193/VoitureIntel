@@ -1,6 +1,6 @@
 #include "bsp_ps2.h"
 
-#define DELAY_TIME delay_us(5);
+#define DELAY_TIME Delay_Us(5);
 
 uint16_t Handkey;														  // Read key values and store them at zero. 按键值读取，零时存储。
 uint8_t Comd[2] = {0x01, 0x42};											  // Start command. Request Data 开始命令。请求数据
@@ -51,7 +51,7 @@ void PS2_Cmd(uint8_t CMD)
 		if (DI) // At high levels 为高电平的时候
 			Data[1] = ref | Data[1];
 	}
-	delay_us(16);
+	(16);
 }
 /**************************************************************************
 函数功能：判断是否为红灯模式,0x41=模拟绿灯，0x73=模拟红灯
@@ -99,7 +99,7 @@ void PS2_ReadData(void)
 			if (DI)
 				Data[byte] = ref | Data[byte];
 		}
-		delay_us(16);
+		(16);
 	}
 	CS_H;
 }
@@ -160,7 +160,7 @@ Return value: None
 void PS2_Vibration(uint8_t motor1, uint8_t motor2)
 {
 	CS_L;
-	delay_us(16);
+	Delay_Us(16);
 	PS2_Cmd(0x01); // start command 开始命令
 	PS2_Cmd(0x42); // request data 请求数据
 	PS2_Cmd(0X00);
@@ -171,7 +171,7 @@ void PS2_Vibration(uint8_t motor1, uint8_t motor2)
 	PS2_Cmd(0X00);
 	PS2_Cmd(0X00);
 	CS_H;
-	delay_us(16);
+	Delay_Us(16);
 }
 /**************************************************************************
 函数功能：short poll
@@ -184,14 +184,14 @@ Return value: None
 void PS2_ShortPoll(void)
 {
 	CS_L;
-	delay_us(16);
+	Delay_Us(16);
 	PS2_Cmd(0x01);
 	PS2_Cmd(0x42);
 	PS2_Cmd(0X00);
 	PS2_Cmd(0x00);
 	PS2_Cmd(0x00);
 	CS_H;
-	delay_us(16);
+	Delay_Us(16);
 }
 /**************************************************************************
 函数功能：进入配置
@@ -204,7 +204,7 @@ Return value: None
 void PS2_EnterConfing(void)
 {
 	CS_L;
-	delay_us(16);
+	Delay_Us(16);
 	PS2_Cmd(0x01);
 	PS2_Cmd(0x43);
 	PS2_Cmd(0X00);
@@ -215,7 +215,7 @@ void PS2_EnterConfing(void)
 	PS2_Cmd(0X00);
 	PS2_Cmd(0X00);
 	CS_H;
-	delay_us(16);
+	Delay_Us(16);
 }
 /**************************************************************************
 函数功能：发送模式设置
@@ -239,7 +239,7 @@ void PS2_TurnOnAnalogMode(void)
 	PS2_Cmd(0X00);
 	PS2_Cmd(0X00);
 	CS_H;
-	delay_us(16);
+	Delay_Us(16);
 }
 /**************************************************************************
 函数功能：振动设置
@@ -252,14 +252,14 @@ Return value: None
 void PS2_VibrationMode(void)
 {
 	CS_L;
-	delay_us(16);
+	Delay_Us(16);
 	PS2_Cmd(0x01);
 	PS2_Cmd(0x4D);
 	PS2_Cmd(0X00);
 	PS2_Cmd(0x00);
 	PS2_Cmd(0X01);
 	CS_H;
-	delay_us(16);
+	Delay_Us(16);
 }
 /**************************************************************************
 函数功能：完成并保存配置
@@ -272,7 +272,7 @@ Return value: None
 void PS2_ExitConfing(void)
 {
 	CS_L;
-	delay_us(16);
+	Delay_Us(16);
 	PS2_Cmd(0x01);
 	PS2_Cmd(0x43);
 	PS2_Cmd(0X00);
@@ -283,7 +283,7 @@ void PS2_ExitConfing(void)
 	PS2_Cmd(0x5A);
 	PS2_Cmd(0x5A);
 	CS_H;
-	delay_us(16);
+	Delay_Us(16);
 }
 /**************************************************************************
 函数功能：手柄配置初始化

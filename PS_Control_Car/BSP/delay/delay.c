@@ -23,7 +23,7 @@ void Delay_Init(void)
 **Input parameter: nus
 **Output parameter: None
 ***********************************************************/
-void delay_us(uint32_t nus)
+void Delay_Us(uint32_t nus)
 {
 	uint32_t ticks;
 	uint32_t told, tnow, tcnt = 0;
@@ -64,5 +64,5 @@ void delay_us(uint32_t nus)
 ***********************************************************/
 void Delay_Ms(uint16_t nms)
 {
-	delay_us((uint32_t)(nms * 1000)); /*Normal mode delay 普通方式延时 */
+	Delay_Us((uint32_t)(nms * 1000)); /*Normal mode delay 普通方式延时 */
 }

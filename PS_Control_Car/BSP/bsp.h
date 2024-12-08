@@ -26,11 +26,16 @@
 #include "bsp_tim.h"
 #include "bsp_PID_motor.h"
 #include "app_motor.h"
+#include "bsp_ultrasonic.h"
 
 #include "bsp_ps2.h"
 #include "app_ps2.h"
 
 #include "bsp_oled.h"
+
+// Variable externe
+extern uint32_t ultrasonic_num;
+extern uint8_t ultrasonic_flag;
 
 void BSP_Init(void);
 void BSP_Loop(void);
