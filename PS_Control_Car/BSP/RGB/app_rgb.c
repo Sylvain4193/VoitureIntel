@@ -24,9 +24,10 @@ void RGB_color_follow(uint32_t times)
 
 }
 
-//RGB灯流水效果
-//direction；方向 0从右到左 1从左到右
-//times：时间
+//RGB
+//direction； 0 1
+//times : 
+
 void RGB_color_water(uint8_t direction,uint32_t times)
 {
 	if(direction == 0)

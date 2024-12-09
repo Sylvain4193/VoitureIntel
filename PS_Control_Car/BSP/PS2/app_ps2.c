@@ -4,8 +4,8 @@ int PS2_LX, PS2_LY, PS2_RX, PS2_RY, PS2_KEY;
 float Distance_Wall, Offset_Wall = 100, Pas_Wall = 1;
 int16_t g_car_speed = 200;
 
-RGB_Color g_color = red;		   // 设置大灯RGB的颜色 Set the RGB color of the headlights
-Color_effect_t g_Se_eff = CUT_RGB; // 特效的切换 Switching of special effects
+RGB_Color g_color = red;		   // Set the RGB color of the headlights
+Color_effect_t g_Se_eff = CUT_RGB; // Switching of special effects
 
 char line1[20] = {'\0'};
 char line2[20] = {'\0'};
@@ -20,7 +20,7 @@ void User_PS2_Control(void)
 	PS2_LY = PS2_AnologData(PSS_LY);
 	PS2_RX = PS2_AnologData(PSS_RX);
 	PS2_RY = PS2_AnologData(PSS_RY);
-	PS2_KEY = PS2_DataKey(); // 出现192
+	PS2_KEY = PS2_DataKey(); // 192
 
 	sprintf(line1, "speed = %d   ", g_car_speed);
 	sprintf(line2, "Distance = %.3f   ", Distance_Wall);
@@ -86,72 +86,84 @@ void User_PS2_Control(void)
 
 	switch (PS2_KEY)
 	{
-	case PSB_L1:
+
+	case PSB_R2:
 		g_car_speed += 100;
 		if (g_car_speed > 1000)
 			g_car_speed = 1000;
-		break; // 小加速 Minor acceleration
+		break; // Small deceleration 
+	
 	case PSB_L2:
-		g_car_speed += 250;
-		if (g_car_speed > 1000)
-			g_car_speed = 1000;
-		break; // 大加速  负数的时候，摇杆方向可变反 When the acceleration is negative, the direction of the joystick can be reversed
-
-	case PSB_R1:
 		g_car_speed -= 100;
-		if (g_car_speed < 100)
-			g_car_speed = 100;
-		break; // 小减速 Small deceleration
-	case PSB_R2:
-		g_car_speed -= 250;
 		if (g_car_speed < -1000)
 			g_car_speed = -1000;
-		break; // 大减速 负数的时候，摇杆方向可变反 When the deceleration is negative, the direction of the joystick can be reversed
+		break; // Small deceleration 
+		// When the acceleration is negative, the direction of the joystick can be reversed
+	
+	case PSB_R1: //Color phare +1 / To do if need one more button : Loop on the color and L1 or R1 button will be free
+		RGB_OFF_ALL;
+		if (g_color != Max_color)
+			g_color++;
+		/*g_car_speed -= 250;
+		if (g_car_speed < -1000)
+			g_car_speed = -1000;*/
+		break; // When the deceleration is negative, the direction of the joystick can be reversed
+
+	case PSB_L1: //Color phare -1
+		RGB_OFF_ALL;
+		if (g_color != red)
+			g_color--;
+		/*g_car_speed += 250;
+		if (g_car_speed > 1000)
+			g_car_speed = 1000;*/
+		break; // When the acceleration is negative, the direction of the joystick can be reversed
 
 	case PSB_PAD_UP:
 		Offset_Wall = Offset_Wall + Pas_Wall;
 		break;
 	case PSB_PAD_RIGHT:
-		
+		Pas_Wall = Pas_Wall + 1;
 		break;
 	case PSB_PAD_DOWN:
 		Offset_Wall = Offset_Wall - Pas_Wall;
 		break;
 	case PSB_PAD_LEFT:
-		
+		if Pas_Wall == 1
+			break;
+		Pas_Wall = Pas_Wall -1;
 		break;
 
-	case PSB_GREEN: //Triangle
+	case PSB_GREEN: // Triangle 
 		Distance_Wall = Get_distance();
+		// To do : Mettre le Klaxon
 		break;
-	case PSB_BLUE: //Cross
+	case PSB_BLUE: // Cross
+		// To do Start en Stop 
 		RGB_OFF_ALL;
 		if (g_color != red)
 			g_color--;
-		break; // 关闭所有大灯 Turn off all headlights
-	case PSB_PINK: //Square
-		g_Se_eff++; // 切换特效 Switch special effects
+		break; // Turn off all headlights
+	case PSB_PINK: // Square
+		g_Se_eff++; // Switch special effects
 		if (g_Se_eff >= RGB_EFFCT_MAX)
 		{
 			g_Se_eff = CUT_RGB;
 		}
-		wheel_State(MOTION_STOP, 0); // 把车停了，再展示特效 Park the car and display the special effects again
+		wheel_State(MOTION_STOP, 0); // Park the car and display the special effects again
 		user_control(g_Se_eff);
 		break;
 	case PSB_RED:  //Round
-		g_Se_eff--; // 切换特效 Switch special effects
+		g_Se_eff--; // Switch special effects
 		if (g_Se_eff < CUT_RGB)
 		{
 			g_Se_eff = (Color_effect_t)(RGB_EFFCT_MAX - 1);
 		}
-		wheel_State(MOTION_STOP, 0); // 把车停了，再展示特效 Park the car and display the special effects again
+		wheel_State(MOTION_STOP, 0); // Park the car and display the special effects again
 		user_control(g_Se_eff);
 		break;
-
 	default:
 		break;
 		wheel_State(MOTION_STOP, 0);
 	}
-
-	HAL_Delay(20); // 保持连接 Stay connected
+	HAL_Delay(20); // Stay connected
 }
