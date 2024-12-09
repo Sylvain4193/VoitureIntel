@@ -1,0 +1,2 @@
+../BSP/motor/bsp_motor.c:21:6:Motor_Stop	0	static
+../BSP/motor/bsp_motor.c:37:6:Motor_Set_Pwm	0	static

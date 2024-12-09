@@ -1,0 +1,168 @@
+#include "app_ps2.h"
+
+int PS2_LX, PS2_LY, PS2_RX, PS2_RY, PS2_KEY;
+float Distance_Wall, Offset_Wall = 100, Pas_Wall = 1;
+int16_t g_car_speed = 200;
+
+RGB_Color g_color = red;		   // Set the RGB color of the headlights
+Color_effect_t g_Se_eff = CUT_RGB; // Switching of special effects
+
+char line1[20] = {'\0'};
+char line2[20] = {'\0'};
+char line3[20] = {'\0'};
+
+// 函数功能：ps2控制小车
+// Function function: PS2 control car
+void User_PS2_Control(void)
+{
+	// 如果不接手柄，即4个255 If the handle is not connected, i.e. 4 255
+	PS2_LX = PS2_AnologData(PSS_LX);
+	PS2_LY = PS2_AnologData(PSS_LY);
+	PS2_RX = PS2_AnologData(PSS_RX);
+	PS2_RY = PS2_AnologData(PSS_RY);
+	PS2_KEY = PS2_DataKey(); // 192
+
+	sprintf(line1, "speed = %d   ", g_car_speed);
+	sprintf(line2, "Distance = %.3f   ", Distance_Wall);
+	sprintf(line3, "Break Dist = %.3f   ", Offset_Wall);
+	
+	OLED_Draw_Line(line1, 2, false, false);
+	OLED_Draw_Line(line2, 2, false, false);
+	OLED_Draw_Line(line3, 3, false, true);
+
+	Distance_Wall = Get_distance();
+
+	// The handle is not communicating
+	if ((PS2_LX == 255) && (PS2_LY == 255) && (PS2_RX == 255) && (PS2_RY == 255))
+	{
+		return;
+	}
+	else if ((PS2_LX == 0) && (PS2_LY == 0) && (PS2_RX == 0) && (PS2_RY == 0))
+	{
+		return;
+	}
+	else if ((PS2_LX == 192) || (PS2_LY == 192) || (PS2_RX == 192) || (PS2_RY == 192)) // This is a misjudgment value, you can adjust it yourself then
+	{
+		return;
+	}
+	if (Offset_Wall < Distance_Wall) {
+
+		// Left controls front and rear, right controls left and right
+		if (PS2_LY < 125 && (PS2_RX > 125 && PS2_RX < 150)) // Before control
+		{
+			wheel_State(MOTION_RUN, g_car_speed);
+		}
+		else if (PS2_LY > 150 && (PS2_RX > 125 && PS2_RX < 150)) // After control
+		{
+			wheel_State(MOTION_BACK, g_car_speed);
+		}
+		else if (PS2_RX < 125 && (PS2_LY > 125 && PS2_LY < 150)) // Control Left
+		{
+			wheel_State(MOTION_LEFT, g_car_speed);
+		}
+		else if (PS2_RX > 150 && (PS2_LY > 125 && PS2_LY < 150)) // Control Right
+		{
+			wheel_State(MOTION_RIGHT, g_car_speed);
+		}
+		else if ((PS2_LY < 125 && PS2_RX < 125) || (PS2_LY > 150 && PS2_RX < 125)) // counter-clockwise
+		{
+			wheel_State(MOTION_SPIN_LEFT, g_car_speed);
+		}
+		else if ((PS2_LY < 125 && PS2_RX > 150) || (PS2_LY > 150 && PS2_RX > 150)) // dextrorotation
+		{
+			wheel_State(MOTION_SPIN_RIGHT, g_car_speed);
+		}
+
+		else
+		{
+			if (PS2_KEY == 0) // No buttons pressed
+				wheel_State(MOTION_STOP, 0);
+		}
+
+	}
+	else { //Emergency Break because of the Wall
+		wheel_State(MOTION_STOP, 0);
+	}
+
+	switch (PS2_KEY)
+	{
+
+	case PSB_R2:
+		g_car_speed += 100;
+		if (g_car_speed > 1000)
+			g_car_speed = 1000;
+		break; // Small deceleration 
+	
+	case PSB_L2:
+		g_car_speed -= 100;
+		if (g_car_speed < -1000)
+			g_car_speed = -1000;
+		break; // Small deceleration 
+		// When the acceleration is negative, the direction of the joystick can be reversed
+	
+	case PSB_R1: //Color phare +1 / To do if need one more button : Loop on the color and L1 or R1 button will be free
+		RGB_OFF_ALL;
+		if (g_color != Max_color)
+			g_color++;
+		/*g_car_speed -= 250;
+		if (g_car_speed < -1000)
+			g_car_speed = -1000;*/
+		break; // When the deceleration is negative, the direction of the joystick can be reversed
+
+	case PSB_L1: //Color phare -1
+		RGB_OFF_ALL;
+		if (g_color != red)
+			g_color--;
+		/*g_car_speed += 250;
+		if (g_car_speed > 1000)
+			g_car_speed = 1000;*/
+		break; // When the acceleration is negative, the direction of the joystick can be reversed
+
+	case PSB_PAD_UP:
+		Offset_Wall = Offset_Wall + Pas_Wall;
+		break;
+	case PSB_PAD_DOWN:
+		Offset_Wall = Offset_Wall - Pas_Wall;
+		break;
+
+	case PSB_PAD_RIGHT:
+		Pas_Wall = Pas_Wall + 1;
+		break;
+	case PSB_PAD_LEFT:
+		Pas_Wall = Pas_Wall - 1;
+		break;
+
+	case PSB_GREEN: // Triangle 
+		Distance_Wall = Get_distance();
+		// To do : Mettre le Klaxon
+		break;
+	case PSB_BLUE: // Cross
+		// To do Start en Stop 
+		RGB_OFF_ALL;
+		if (g_color != red)
+			g_color--;
+		break; // Turn off all headlights
+	case PSB_PINK: // Square
+		g_Se_eff++; // Switch special effects
+		if (g_Se_eff >= RGB_EFFCT_MAX)
+		{
+			g_Se_eff = CUT_RGB;
+		}
+		wheel_State(MOTION_STOP, 0); // Park the car and display the special effects again
+		user_control(g_Se_eff);
+		break;
+	case PSB_RED:  //Round
+		g_Se_eff--; // Switch special effects
+		if (g_Se_eff < CUT_RGB)
+		{
+			g_Se_eff = (Color_effect_t)(RGB_EFFCT_MAX - 1);
+		}
+		wheel_State(MOTION_STOP, 0); // Park the car and display the special effects again
+		user_control(g_Se_eff);
+		break;
+	default:
+		break;
+		wheel_State(MOTION_STOP, 0);
+	}
+	HAL_Delay(20); // Stay connected
+}

@@ -1,0 +1,13 @@
+../BSP/PS2/bsp_ps2.c:34:6:PS2_Cmd	4
+../BSP/PS2/bsp_ps2.c:64:9:PS2_RedLight	1
+../BSP/PS2/bsp_ps2.c:83:6:PS2_ReadData	4
+../BSP/PS2/bsp_ps2.c:137:9:PS2_AnologData	1
+../BSP/PS2/bsp_ps2.c:142:6:PS2_ClearData	1
+../BSP/PS2/bsp_ps2.c:116:9:PS2_DataKey	3
+../BSP/PS2/bsp_ps2.c:160:6:PS2_Vibration	1
+../BSP/PS2/bsp_ps2.c:184:6:PS2_ShortPoll	1
+../BSP/PS2/bsp_ps2.c:204:6:PS2_EnterConfing	1
+../BSP/PS2/bsp_ps2.c:228:6:PS2_TurnOnAnalogMode	1
+../BSP/PS2/bsp_ps2.c:252:6:PS2_VibrationMode	1
+../BSP/PS2/bsp_ps2.c:272:6:PS2_ExitConfing	1
+../BSP/PS2/bsp_ps2.c:296:6:PS2_SetInit	1

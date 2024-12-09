@@ -1,7 +1,7 @@
 #include "app_ps2.h"
 
 int PS2_LX, PS2_LY, PS2_RX, PS2_RY, PS2_KEY;
-float Distance_Wall, Offset_Wall = 100, Pas_Wall = 1;
+float Distance_Wall, Offset_Wall = 30, Pas_Wall = 1;
 int16_t g_car_speed = 200;
 
 RGB_Color g_color = red;		   // Set the RGB color of the headlights
@@ -10,12 +10,11 @@ Color_effect_t g_Se_eff = CUT_RGB; // Switching of special effects
 char line1[20] = {'\0'};
 char line2[20] = {'\0'};
 char line3[20] = {'\0'};
-
-// 函数功能：ps2控制小车
+//To do : Put horn when to close from a wall (put silence mode too)
 // Function function: PS2 control car
 void User_PS2_Control(void)
 {
-	// 如果不接手柄，即4个255 If the handle is not connected, i.e. 4 255
+	// 个255 If the handle is not connected, i.e. 4 255
 	PS2_LX = PS2_AnologData(PSS_LX);
 	PS2_LY = PS2_AnologData(PSS_LY);
 	PS2_RX = PS2_AnologData(PSS_RX);
@@ -23,12 +22,12 @@ void User_PS2_Control(void)
 	PS2_KEY = PS2_DataKey(); // 192
 
 	sprintf(line1, "speed = %d   ", g_car_speed);
-	sprintf(line2, "Distance = %.3f   ", Distance_Wall);
+	sprintf(line2, "Distance = %.3f   ", Dista nce_Wall);
 	sprintf(line3, "Break Dist = %.3f   ", Offset_Wall);
 	
 	OLED_Draw_Line(line1, 2, false, false);
-	OLED_Draw_Line(line2, 2, false, false);
-	OLED_Draw_Line(line3, 3, false, true);
+	OLED_Draw_Line(line2, 3, false, false);
+	OLED_Draw_Line(line3, 4, false, true);
 
 	Distance_Wall = Get_distance();
 
@@ -80,14 +79,17 @@ void User_PS2_Control(void)
 		}
 
 	}
-	else { //Emergency Break because of the Wall
+	else {
+		if (PS2_LY > 150 && (PS2_RX > 125 && PS2_RX < 150)) // Obstacle in front, go in reverse
+					wheel_State(MOTION_BACK, g_car_speed);
+		//Emergency Break because of the Wall
 		wheel_State(MOTION_STOP, 0);
 	}
 
 	switch (PS2_KEY)
 	{
 
-	case PSB_R2:
+	case PSB_R2: // To do : Change completely how works the speed. Do like a car, more i press, more speed, realease = little deceleration, brake = brake or reverse
 		g_car_speed += 100;
 		if (g_car_speed > 1000)
 			g_car_speed = 1000;
@@ -95,12 +97,13 @@ void User_PS2_Control(void)
 	
 	case PSB_L2:
 		g_car_speed -= 100;
-		if (g_car_speed < -1000)
-			g_car_speed = -1000;
+		if (g_car_speed < 0)
+			g_car_speed = 0;
 		break; // Small deceleration 
 		// When the acceleration is negative, the direction of the joystick can be reversed
+		// To do : Put negative acceleration and handle issue with obstacle (just to change the if and add another one) after the change of speed
 	
-	case PSB_R1: //Color phare +1 / To do if need one more button : Loop on the color and L1 or R1 button will be free
+	case PSB_R1: //Color headlights +1 / To do if need one more button : Loop on the color and L1 or R1 button will be free
 		RGB_OFF_ALL;
 		if (g_color != Max_color)
 			g_color++;
@@ -109,7 +112,7 @@ void User_PS2_Control(void)
 			g_car_speed = -1000;*/
 		break; // When the deceleration is negative, the direction of the joystick can be reversed
 
-	case PSB_L1: //Color phare -1
+	case PSB_L1: //Color headlights -1
 		RGB_OFF_ALL;
 		if (g_color != red)
 			g_color--;
@@ -121,27 +124,28 @@ void User_PS2_Control(void)
 	case PSB_PAD_UP:
 		Offset_Wall = Offset_Wall + Pas_Wall;
 		break;
-	case PSB_PAD_RIGHT:
-		Pas_Wall = Pas_Wall + 1;
-		break;
 	case PSB_PAD_DOWN:
 		Offset_Wall = Offset_Wall - Pas_Wall;
 		break;
+
+	case PSB_PAD_RIGHT:
+		Pas_Wall = Pas_Wall + 1;
+		break;
 	case PSB_PAD_LEFT:
-		if Pas_Wall == 1
-			break;
-		Pas_Wall = Pas_Wall -1;
+		Pas_Wall = Pas_Wall - 1;
+		if (Pas_Wall == 0)
+				Pas_Wall = 1;
 		break;
 
 	case PSB_GREEN: // Triangle 
 		Distance_Wall = Get_distance();
-		// To do : Mettre le Klaxon
+		// To do : Put horn here
 		break;
 	case PSB_BLUE: // Cross
 		// To do Start en Stop 
 		RGB_OFF_ALL;
-		if (g_color != red)
-			g_color--;
+		/*if (g_color != red)
+			g_color--;*/
 		break; // Turn off all headlights
 	case PSB_PINK: // Square
 		g_Se_eff++; // Switch special effects
