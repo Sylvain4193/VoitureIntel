@@ -58,11 +58,11 @@ Ce projet est une voiture robot autonome et télécommandable, développée sur 
 
 ## 📸 Démonstration
 
-_(Ajoute ici une image ou une vidéo gif de ta voiture en action !)_
+_(A Venir)_
 
 ---
 
-## ✅ À venir / améliorations possibles
+## ✅ Améliorations possibles
 
 - Communication via **CAN** avec une carte ESP32 pour pilotage WiFi
 - Streaming vidéo embarqué via caméra + ESP32-CAM
